@@ -1,0 +1,67 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PostCard from '../components/PostCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 3);
+
+const projects = (await getCollection('projects'))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 4);
+---
+
+<Layout title="Home | Kyle Undefined">
+	<section class="py-12 md:py-10">
+		<div class="space-y-6">
+			<h1 class="text-4xl md:text-6xl font-bold tracking-tighter">
+				Heyo, I'm <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blog-accent dark:to-blog-code">Kyle</span>...
+			</h1>
+			<p class="text-xl md:text-2xl text-slate-600 dark:text-blog-text">
+				Just a dude who enjoys writing code & learning;
+			</p>
+			<p class="text-xl md:text-2xl text-slate-600 dark:text-blog-text">
+				I'm a self taught Dev/Eng who started out writing Runescape bots back in highschool. Then in '08 I got my first crack at the industry doing web, but moved to software and back-end, except for a few projects here and there.
+			</p>
+			<p class="text-xl md:text-2xl text-slate-600 dark:text-blog-text">
+				I love the craft, there's always some new tech to enjoy, and things are constantly evolving, kind of like myself, which is why I'm <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blog-accent dark:to-blog-code">undefined</span>.
+			</p>
+		</div>
+	</section>
+
+	<section class="py-12 border-t border-slate-200 dark:border-blog-border">
+		<div class="flex items-center justify-between mb-8">
+			<h2 class="text-2xl font-bold text-slate-900 dark:text-blog-accent">Featured Projects</h2>
+			<a href="/projects" class="text-blue-600 dark:text-blog-link flip-animate">View all <span data-hover="&rarr;">&rarr;</span></a>
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+			{projects.length > 0 ? (
+				projects.map((project) => (
+					<ProjectCard project={project} />
+				))
+			) : (
+				<p class="col-span-full text-center text-slate-500 py-12">No projects found (yet!). Check back soon.</p>
+			)}
+		</div>
+	</section>
+
+	<section class="py-12 border-t border-slate-200 dark:border-blog-border">
+		<div class="flex items-center justify-between mb-8">
+			<h2 class="text-2xl font-bold text-slate-900 dark:text-blog-accent">Latest Posts</h2>
+			<a href="/blog" class="text-blue-600 dark:text-blog-link flip-animate">View all <span data-hover="&rarr;">&rarr;</span></a>
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+			{posts.length > 0 ? (
+				posts.map((post) => (
+					<PostCard post={post} />
+				))
+			) : (
+				<p class="col-span-full text-center text-slate-500 py-12">No posts found (yet!). Check back soon.</p>
+			)}
+		</div>
+	</section>
+</Layout>

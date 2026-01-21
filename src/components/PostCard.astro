@@ -1,0 +1,33 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { title, description, pubDate } = post.data;
+---
+
+<a href={`/blog/${post.slug}`} class="group flex flex-col h-full bg-white dark:bg-blog-code-bg rounded-2xl overflow-hidden shadow-sm hover:shadow-md duration-300 border border-slate-200 dark:border-blog-border hover:border-blue-500 dark:hover:border-blog-accent transition-all duration-300">
+  <div class="aspect-video w-full overflow-hidden bg-slate-100 dark:bg-[#202020] relative post-hero content-center">
+    <h3 class="text-2xl font-bold text-slate-900 dark:text-blog-accent mb-2 group-hover:text-blue-600 dark:group-hover:text-blog-code transition-colors text-center">
+      {title}
+    </h3>
+  </div>
+  
+  <div class="p-6 flex flex-col flex-grow">
+    <div class="text-sm text-slate-500 dark:text-blog-text mb-2">
+      <time datetime={pubDate.toISOString()}>
+        {pubDate.toLocaleDateString('en-us', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        })}
+      </time>
+    </div>
+    <p class="text-slate-600 dark:text-blog-text text-sm line-clamp-3">
+      {description}
+    </p>
+  </div>
+</a>

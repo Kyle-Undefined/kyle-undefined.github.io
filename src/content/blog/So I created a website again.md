@@ -1,0 +1,21 @@
+---
+title: So I created a website (again)
+description: Journey into a new mindset
+pubDate: 2026-01-20
+icon: LiNotebookPen
+---
+Man does time fly... I originally set out to create this a year ago, but life gets in the way. Granted, this is probably my 4th or 5th iteration of a personal site. They've all served a purpose, been built with different technologies, and faded into the void.
+
+I tried this with Hugo and Obsidian, after watching a YouTube video showcasing the combo. I got it all up and running, but I didn't *feel* it. The setup was a bit clunky, and I was zeroed in on making that one way work. It wasn't the most work, but was more than writing the post, committing, and pushing. I had to run a Python script to convert the image links in the post from the Markdown way to the HTML way. While it worked, I could either see the post in Obsidian with images, or process it and then only be able to see the images on the web. I'm an OCD person.
+
+I eventually dropped that project, after not finding a solution to that one issue. Never finished writing my post, never hit commit, never hit **push**. This year is going to be different.
+
+I have a lot of ideas bouncing around my old noggin. Many are just one offs that are "meh" on the totem pole of interesting. Some, are worth getting into simply because it offers learning something new, like this browser extension for tab management (I have a problem... and a solution!). That could be a new language, new stack, tech, or way of doing something I've done a million times. A few ideas though, just latch onto you. Like my [PoE Bot](https://github.com/Kyle-Undefined/PoE-Bot) that was more fun to build and improve, than actually playing the game. Or, what do you do while shiny hunting and waiting for DLC? Build a [site](https://kyleundefined.dev/tera-raid-info/) that turns Serebii data into an easy to digest format for Tera Raids (And building a Google Spreadsheet to auto format the data instead of doing it by hand). Lately, I started a project for my TCG hobby, all because I noticed Collectr has an export functionality, and I saw some cool card CSS that I want to try out. That project is quickly becoming more addictive than Arc Raiders!
+
+With that said, the PoE Bot and Tera Raid projects were my full attention hogs when I was developing them. I would focus that one thing, until it was done or I was happy with it. I mean, great, the project is completed but I had burnt myself out on *doing* more projects. I don't want to do that anymore, I want to have brain power and energy for the other projects I want to get done when not working, socializing, and gaming. That's why I restarted the blog project.
+
+I know the TCG project is going to take me a while, and I need something else that captures my interest enough to not mainline one thing at a time. I was looking at my old Hugo site after getting to a stopping point with the current project, and honestly felt kind of daunting to get back into it. After a quick search, I came across Astro, which is exactly what I was looking for. Based in TypeScript which I know enough to be dangerous with and it allows me to have the static generated site for GitHub Pages hosting, but dynamically built based on the content which is just `.md` files. I created a new Obsidian vault in the `/src/content/` of the project and every blog post is just a Templater, commit, and push away!
+
+I don't know how often I will post, but I already have a few ideas in mind for more in the future. Want to do a write one up on the building and evolution of the Tera Raid website, was a really fun learning process. I will be writing one for the TCG project, I really enjoy what I've built so far and the tools to support it. I have high hopes for this blog, my little space to get things off the brain and into the void. I have several projects in the works, of varying difficulties, so I will have a lot to share this year. I don't really do New Year resolutions but a personal change I am making, and have made great success with so far, is not holding up myself from other projects just because I am working on something already.
+
+There's too many things to learn, do, and build. But this year, I will **create**.
