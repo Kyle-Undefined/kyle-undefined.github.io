@@ -9,16 +9,15 @@ interface Props {
 	description?: string;
 }
 
-const { title, description = "Kyle Undefined, just a dude who enjoys writing code & learning;" } = Astro.props;
+const { title, description = "Kyle Undefined.dev, just a dude who enjoys writing code & learning;" } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="en" class="scroll-smooth">
 	<head>
-		<meta charset="UTF-8" />
+		<meta charset="utf-8" />
 		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/icon" href="/favicon.ico" />
 		<meta name="generator" content={Astro.generator} />
 		
 		<!-- Open Graph / Facebook -->

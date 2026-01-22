@@ -1,4 +1,5 @@
 ---
+import PostHogLayout from '../layouts/PostHogLayout.astro';
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
@@ -7,19 +8,21 @@ const projects = (await getCollection('projects'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 ---
 
-<Layout title="Projects | Kyle Undefined" description="Collection of my projects over the years...">
-  <section class="py-12">
-    <div class="max-w-3xl mb-12">
-      <h1 class="text-4xl font-bold mb-4 text-slate-900 dark:text-blog-accent">Projects</h1>
-      <p class="text-xl text-slate-600 dark:text-blog-text">
-        Collection of my projects over the years...
-      </p>
-    </div>
+<PostHogLayout>
+  <Layout title="Projects | Kyle Undefined" description="Collection of my projects over the years...">
+    <section class="py-12">
+      <div class="max-w-3xl mb-12">
+        <h1 class="text-4xl font-bold mb-4 text-slate-900 dark:text-blog-accent">Projects</h1>
+        <p class="text-xl text-slate-600 dark:text-blog-text">
+          Collection of my projects, that I still have, over the years...
+        </p>
+      </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {projects.map((project) => (
-        <ProjectCard project={project} />
-      ))}
-    </div>
-  </section>
-</Layout>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {projects.map((project) => (
+          <ProjectCard project={project} />
+        ))}
+      </div>
+    </section>
+  </Layout>
+</PostHogLayout>

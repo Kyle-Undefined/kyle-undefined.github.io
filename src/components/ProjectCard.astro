@@ -36,6 +36,9 @@ const { project } = Astro.props;
   <p class="text-slate-600 dark:text-blog-text mb-6">
     {project.data.description}
   </p>
+  <p class="text-slate-600 dark:text-blog-text mb-6 text-xs">
+    Git init: {project.data.pubDate.toLocaleDateString()}
+  </p>
   <div class="flex flex-wrap gap-2">
     {project.data.tags && project.data.tags.map((tag) => (
       <span class="px-3 py-1 text-xs font-medium text-blue-600 dark:text-blog-code bg-blue-50 dark:bg-blog-code-bg/50 border dark:border-blog-code/20 rounded-full">

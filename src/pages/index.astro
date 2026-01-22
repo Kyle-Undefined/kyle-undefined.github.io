@@ -1,4 +1,5 @@
 ---
+import PostHogLayout from '../layouts/PostHogLayout.astro';
 import Layout from '../layouts/Layout.astro';
 import PostCard from '../components/PostCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
@@ -9,11 +10,12 @@ const posts = (await getCollection('blog'))
 	.slice(0, 3);
 
 const projects = (await getCollection('projects'))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 4);
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const projectsSlice = projects.slice(0, 4);
 ---
 
-<Layout title="Home | Kyle Undefined">
+<PostHogLayout>
+  <Layout title="Home | Kyle Undefined">
 	<section class="py-12 md:py-10">
 		<div class="space-y-6">
 			<h1 class="text-4xl md:text-6xl font-bold tracking-tighter">
@@ -33,25 +35,10 @@ const projects = (await getCollection('projects'))
 
 	<section class="py-12 border-t border-slate-200 dark:border-blog-border">
 		<div class="flex items-center justify-between mb-8">
-			<h2 class="text-2xl font-bold text-slate-900 dark:text-blog-accent">Featured Projects</h2>
-			<a href="/projects" class="text-blue-600 dark:text-blog-link flip-animate">View all <span data-hover="&rarr;">&rarr;</span></a>
-		</div>
-
-		<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-			{projects.length > 0 ? (
-				projects.map((project) => (
-					<ProjectCard project={project} />
-				))
-			) : (
-				<p class="col-span-full text-center text-slate-500 py-12">No projects found (yet!). Check back soon.</p>
-			)}
-		</div>
-	</section>
-
-	<section class="py-12 border-t border-slate-200 dark:border-blog-border">
-		<div class="flex items-center justify-between mb-8">
 			<h2 class="text-2xl font-bold text-slate-900 dark:text-blog-accent">Latest Posts</h2>
-			<a href="/blog" class="text-blue-600 dark:text-blog-link flip-animate">View all <span data-hover="&rarr;">&rarr;</span></a>
+			{posts.length > 3 ? (
+				<a href="/blog" class="text-blue-600 dark:text-blog-link flip-animate">View <span data-hover="all">all</span></a>
+			) : null}
 		</div>
 
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -64,4 +51,24 @@ const projects = (await getCollection('projects'))
 			)}
 		</div>
 	</section>
-</Layout>
+
+	<section class="py-12 border-t border-slate-200 dark:border-blog-border">
+		<div class="flex items-center justify-between mb-8">
+			<h2 class="text-2xl font-bold text-slate-900 dark:text-blog-accent">Featured Projects</h2>
+			{projects.length > 4 ? (
+				<a href="/projects" class="text-blue-600 dark:text-blog-link flip-animate">View <span data-hover="all">all</span></a>
+			) : null}
+		</div>
+
+		<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+			{projectsSlice.length > 0 ? (
+				projectsSlice.map((project) => (
+					<ProjectCard project={project} />
+				))
+			) : (
+				<p class="col-span-full text-center text-slate-500 py-12">No projects found (yet!). Check back soon.</p>
+			)}
+		</div>
+	</section>
+  </Layout>
+</PostHogLayout>
