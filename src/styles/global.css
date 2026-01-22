@@ -54,6 +54,10 @@
   @apply dark:text-blog-text dark:border-l-blog-accent;
 }
 
+html {
+  overflow-y: scroll;
+}
+
 body {
   font-family: var(--font-sans);
   @apply bg-slate-50 text-slate-900 dark:bg-blog-bg dark:text-blog-text antialiased;
