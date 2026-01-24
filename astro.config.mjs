@@ -28,8 +28,8 @@ export default defineConfig({
           "public/favicon.svg",
         ],
       },
-      name: "Kyle Undefined.dev",
-      short_name: "Kyle Undefined",
+      name: "kyleundefined.dev",
+      short_name: "KyleUndefined",
       icons: {
         favicons: true,
         android: true,

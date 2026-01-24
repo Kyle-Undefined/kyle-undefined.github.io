@@ -15,29 +15,29 @@ const projectsSlice = projects.slice(0, 4);
 ---
 
 <PostHogLayout>
-  <Layout title="Home | Kyle Undefined">
+  <Layout title="Home | KyleUndefined.dev">
 	<section class="py-12 md:py-10">
 		<div class="space-y-6">
 			<h1 class="text-4xl md:text-6xl font-bold tracking-tighter">
-				Heyo, I'm <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blog-accent dark:to-blog-code">Kyle</span>...
+				Heyo, I'm <span class="bg-clip-text text-transparent bg-gradient-to-r from-blog-accent to-blog-code">Kyle</span>...
 			</h1>
-			<p class="text-xl md:text-2xl text-slate-600 dark:text-blog-text">
+			<p class="text-xl md:text-2xl text-blog-text">
 				Just a dude who enjoys writing code & learning;
 			</p>
-			<p class="text-xl md:text-2xl text-slate-600 dark:text-blog-text">
+			<p class="text-xl md:text-2xl text-blog-text">
 				I'm a self taught Dev/Eng who started out writing Runescape bots back in highschool. Then in '08 I got my first crack at the industry doing web, but moved to software and back-end, except for a few projects here and there.
 			</p>
-			<p class="text-xl md:text-2xl text-slate-600 dark:text-blog-text">
-				I love the craft, there's always some new tech to enjoy, and things are constantly evolving, kind of like myself, which is why I'm <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-violet-600 dark:from-blog-accent dark:to-blog-code">undefined</span>.
+			<p class="text-xl md:text-2xl text-blog-text">
+				I love the craft, there's always some new tech to enjoy, and things are constantly evolving, kind of like myself, which is why I'm <span class="bg-clip-text text-transparent bg-gradient-to-r from-blog-accent to-blog-code">undefined</span>.
 			</p>
 		</div>
 	</section>
 
-	<section class="py-12 border-t border-slate-200 dark:border-blog-border">
+	<section class="py-12 border-t border-blog-border">
 		<div class="flex items-center justify-between mb-8">
-			<h2 class="text-2xl font-bold text-slate-900 dark:text-blog-accent">Latest Posts</h2>
+			<h2 class="text-2xl font-bold text-blog-accent">Latest Posts</h2>
 			{posts.length > 3 ? (
-				<a href="/blog" class="text-blue-600 dark:text-blog-link flip-animate">View <span data-hover="all">all</span></a>
+				<a href="/blog" class="text-blog-link flip-animate">View <span data-hover="all">all</span></a>
 			) : null}
 		</div>
 
@@ -52,11 +52,11 @@ const projectsSlice = projects.slice(0, 4);
 		</div>
 	</section>
 
-	<section class="py-12 border-t border-slate-200 dark:border-blog-border">
+	<section class="py-12 border-t border-blog-border">
 		<div class="flex items-center justify-between mb-8">
-			<h2 class="text-2xl font-bold text-slate-900 dark:text-blog-accent">Featured Projects</h2>
+			<h2 class="text-2xl font-bold text-blog-accent">Featured Projects</h2>
 			{projects.length > 4 ? (
-				<a href="/projects" class="text-blue-600 dark:text-blog-link flip-animate">View <span data-hover="all">all</span></a>
+				<a href="/projects" class="text-blog-link flip-animate">View <span data-hover="all">all</span></a>
 			) : null}
 		</div>
 

@@ -2,8 +2,6 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@variant dark (&:where(.dark, .dark *));
-
 @theme {
   --font-sans: "Monda", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
 
@@ -24,12 +22,8 @@
   }
 }
 
-@view-transition {
-  navigation: auto;
-}
-
 .prose {
-  @apply dark:text-blog-text;
+  @apply text-blog-text;
 }
 
 .prose h1,
@@ -37,23 +31,23 @@
 .prose h3,
 .prose h4,
 .prose a {
-  @apply dark:text-blog-accent;
+  @apply text-blog-accent;
 }
 
 .prose code {
-  @apply dark:text-blog-code;
+  @apply text-blog-code;
 }
 
 .prose pre {
-  @apply dark:bg-blog-code-bg dark:border-blog-border;
+  @apply bg-blog-code-bg border-blog-border;
 }
 
 .prose li::marker {
-  @apply dark:text-blog-list;
+  @apply text-blog-list;
 }
 
 .prose blockquote {
-  @apply dark:text-blog-text dark:border-l-blog-accent;
+  @apply text-blog-text border-l-blog-accent;
 }
 
 html {
@@ -62,7 +56,7 @@ html {
 
 body {
   font-family: var(--font-sans);
-  @apply bg-slate-50 text-slate-900 dark:bg-blog-bg dark:text-blog-text antialiased;
+  @apply bg-blog-bg text-blog-text antialiased;
 }
 
 a.flip-animate {
@@ -114,19 +108,19 @@ mark, strong {
 
 article a {
   position: relative;
-}
 
-article a:after {
-  border-radius: 1em;
-  border-top: .1em solid var(--color-blog-link);
-  content: "";
-  position: absolute;
-  right: 100%;
-  bottom: .14em;
-  left: 0;
-  transition: right .4s cubic-bezier(0,.5,0,1);
-}
+  &:hover:after {
+    right: 0;
+  }
 
-article a:hover:after {
-  right: 0;
+  &:after {
+    border-radius: 1em;
+    border-top: .1em solid var(--color-blog-link);
+    content: "";
+    position: absolute;
+    right: 100%;
+    bottom: .14em;
+    left: 0;
+    transition: right .4s cubic-bezier(0,.5,0,1);
+  }
 }

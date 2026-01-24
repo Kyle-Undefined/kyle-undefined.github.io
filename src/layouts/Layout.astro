@@ -9,11 +9,11 @@ interface Props {
 	description?: string;
 }
 
-const { title, description = "Kyle Undefined.dev, just a dude who enjoys writing code & learning;" } = Astro.props;
+const { title, description = "Just a dude who enjoys writing code & learning;" } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth dark">
+<html lang="en" class="scroll-smooth">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="description" content={description} />

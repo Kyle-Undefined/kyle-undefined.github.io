@@ -12,7 +12,7 @@ const posts = (await getCollection('blog')).sort(
 <PostHogLayout>
   <Layout title="Blog | Kyle Undefined" description="Bloggin what's on the noggin.">
     <section class="py-12">
-      <h1 class="text-4xl font-bold mb-8 text-slate-900 dark:text-blog-accent">Blog</h1>
+      <h1 class="text-4xl font-bold mb-8 text-blog-accent">Blog</h1>
       
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {posts.length > 0 ? (
@@ -20,8 +20,8 @@ const posts = (await getCollection('blog')).sort(
             <PostCard post={post} />
           ))
         ) : (
-          <div class="col-span-full text-center py-20 bg-slate-50 dark:bg-blog-code-bg rounded-2xl border border-dashed border-slate-300 dark:border-blog-border">
-            <p class="text-slate-500 text-lg dark:text-blog-text">Coming soon...</p>
+          <div class="col-span-full text-center py-20 bg-blog-code-bg rounded-2xl border border-dashed border-blog-border">
+            <p class="text-slate-500 text-blog-text">Coming soon...</p>
           </div>
         )}
       </div>
