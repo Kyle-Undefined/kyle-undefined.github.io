@@ -14,6 +14,7 @@ export default defineConfig({
     },
     smartypants: false,
   },
+  trailingSlash: "never",
   build: {
     format: 'file',
   },
@@ -46,4 +47,8 @@ export default defineConfig({
       },
     }),
   ],
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en"]
+  }
 });
