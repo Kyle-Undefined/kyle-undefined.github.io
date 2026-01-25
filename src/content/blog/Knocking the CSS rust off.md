@@ -52,7 +52,7 @@ Now you don't need all of that, you can omit the prefixes and every browser supp
 
 I won't be doing anything crazy or advanced in this post, just some practice with a coin flip using the CSS animations.
 
-The following code examples can be found on [GitHub](https://github.com/Kyle-Undefined/examples.kyle-undefined.github.io).
+The following code examples can be found on my [GitHub](https://github.com/Kyle-Undefined/examples.kyle-undefined.github.io).
 
 We'll start off with a base of:
 <iframe src="https://examples.kyleundefined.dev/coin-flip/base.html" width="100%" height="100" loading="lazy" title="Base"></iframe>
@@ -331,7 +331,7 @@ Phew, that's a lot! Let's break that down...
 
 I start with the base step which is just the coin being on the "table". I then calculate the transform value from the Step * step number, and the bottom value from the height step * step number. The step number for the `transform` and `bottom` is the calculated degrees/height per animation stage. The height step goes up to 4 and then back down to 1. The rotation step goes up to 9 for the pause at the end. I then end the animation with the div being "reset" and resting.
 
-Visually nothing changes, and technically functionality doesn't change either. However, this now allows me to adjust the coin flip by changing a few lines instead of the whole `@keyframes` setup. 
+Visually nothing changes, and technically, functionality doesn't change either. However, this now allows me to adjust the coin flip by changing a few lines instead of the whole `@keyframes` setup. 
 <iframe src="https://examples.kyleundefined.dev/coin-flip/flip-func.html" width="100%" height="300" loading="lazy" title="Flip Func"></iframe>
 
 Want a slow mode flip? Easy, just adjust the `--anim-time` variable to `5s` and boom, it all updates.
