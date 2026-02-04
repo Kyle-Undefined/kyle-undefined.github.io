@@ -26,7 +26,7 @@ export async function GET(context) {
             description: post.data.description,
             link: `/blog/${post.slug}/`,
             pubDate: post.data.pubDate,
-            content: sanitizeHtml(parser.render(post.body.replaceAll(/<iframe[^>]*src=["']([^"']+)["'][^>]*>.*?<\/iframe>/gi, '[Note: Embedded content from $1]'))),
+            content: sanitizeHtml(parser.render(post.body.replaceAll(/!\[\[([^\]]+)\]\]/g, '[Embedded Image]').replaceAll(/<iframe[^>]*src=["']([^"']+)["'][^>]*>.*?<\/iframe>/gi, '[Note: Embedded content from $1]'))),
         })),
     });
 }

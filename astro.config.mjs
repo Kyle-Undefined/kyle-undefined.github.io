@@ -2,12 +2,14 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import favicons from 'astro-favicons';
+import wikiImagePlugin from './src/plugins/wikiImagePlugin.mjs';
 
 // https://astro.build/config
 export default defineConfig({
   site: 'https://kyleundefined.dev',
   output: 'static',
   markdown: {
+    remarkPlugins: [wikiImagePlugin],
     syntaxHighlight: 'shiki',
     shikiConfig: {
       theme: 'synthwave-84',
