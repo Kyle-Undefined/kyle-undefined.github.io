@@ -7,7 +7,7 @@ import { getCollection } from 'astro:content';
 
 const posts = (await getCollection('blog'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 3);
+const postsSlice = posts.slice(0, 3);
 
 const projects = (await getCollection('projects'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -42,8 +42,8 @@ const projectsSlice = projects.slice(0, 4);
 		</div>
 
 		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-			{posts.length > 0 ? (
-				posts.map((post) => (
+			{postsSlice.length > 0 ? (
+				postsSlice.map((post) => (
 					<PostCard post={post} />
 				))
 			) : (
