@@ -7,17 +7,113 @@ import { getCollection } from 'astro:content';
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+
+const yearCounts = posts.reduce((counts, post) => {
+  const year = post.data.pubDate.toISOString().slice(0, 4);
+  counts.set(year, (counts.get(year) ?? 0) + 1);
+  return counts;
+}, new Map<string, number>());
+
+const monthCounts = posts.reduce((counts, post) => {
+  const month = post.data.pubDate.toISOString().slice(0, 7);
+  counts.set(month, (counts.get(month) ?? 0) + 1);
+  return counts;
+}, new Map<string, number>());
+
+const yearFilters = [...yearCounts.entries()]
+  .sort((a, b) => b[0].localeCompare(a[0]))
+  .map(([value, count]) => ({
+    period: `year:${value}`,
+    value,
+    count,
+    label: value,
+  }));
+
+const monthLabelFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+const monthFilters = [...monthCounts.entries()]
+  .sort((a, b) => b[0].localeCompare(a[0]))
+  .map(([value, count]) => ({
+    period: `month:${value}`,
+    value,
+    count,
+    label: monthLabelFormatter.format(new Date(`${value}-01T00:00:00.000Z`)),
+  }));
 ---
 
 <PostHogLayout>
   <Layout title="Blog | Kyle Undefined" description="Bloggin what's on the noggin.">
-    <section class="py-12">
+    <section class="py-12" data-blog-page>
       <h1 class="text-4xl font-bold mb-8 text-blog-accent">Blog</h1>
-      
+
+      {posts.length > 0 && (
+        <div class="mb-10 rounded-2xl border border-blog-border bg-blog-code-bg/50 p-6">
+          <div class="mb-4 flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold text-blog-accent">Filter by date</h2>
+            <a href="/blog" class="text-sm text-blog-link hidden flip-animate" data-clear-filter>
+              Clear <span data-hover="filter">filter</span>
+            </a>
+          </div>
+
+          {yearFilters.length > 0 && (
+            <div class="mb-5">
+              <h3 class="mb-3 text-xs font-semibold uppercase tracking-wide text-blog-text">Years</h3>
+              <div class="flex flex-wrap items-center gap-3">
+                {yearFilters.map(({ period, count, label }) => (
+                  <a
+                    href={`/blog?period=${encodeURIComponent(period)}`}
+                    data-period-value={period}
+                    data-period-label={label}
+                    class="inline-flex items-center gap-2 rounded-full border border-blog-code/20 bg-blog-code-bg px-3 py-1 text-sm text-blog-text transition-colors hover:border-blog-accent hover:text-blog-link"
+                  >
+                    <span>{label}</span>
+                    <span class="text-[11px] opacity-75">{count}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {monthFilters.length > 0 && (
+            <div>
+              <h3 class="mb-3 text-xs font-semibold uppercase tracking-wide text-blog-text">Months</h3>
+              <div class="flex flex-wrap items-center gap-3">
+                {monthFilters.map(({ period, count, label }) => (
+                  <a
+                    href={`/blog?period=${encodeURIComponent(period)}`}
+                    data-period-value={period}
+                    data-period-label={label}
+                    class="inline-flex items-center gap-2 rounded-full border border-blog-code/20 bg-blog-code-bg px-3 py-1 text-sm text-blog-text transition-colors hover:border-blog-accent hover:text-blog-link"
+                  >
+                    <span>{label}</span>
+                    <span class="text-[11px] opacity-75">{count}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      <p class="mb-6 text-sm text-blog-text hidden" data-filter-summary>
+        Showing <span data-filter-count>0</span> <span data-filter-label>posts</span> from{' '}
+        <span class="font-semibold text-blog-accent" data-filter-period></span>:
+      </p>
+
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {posts.length > 0 ? (
           posts.map((post) => (
-            <PostCard post={post} />
+            <div
+              data-post-item
+              data-post-year={post.data.pubDate.toISOString().slice(0, 4)}
+              data-post-month={post.data.pubDate.toISOString().slice(0, 7)}
+            >
+              <PostCard post={post} />
+            </div>
           ))
         ) : (
           <div class="col-span-full text-center py-20 bg-blog-code-bg rounded-2xl border border-dashed border-blog-border">
@@ -26,5 +122,145 @@ const posts = (await getCollection('blog')).sort(
         )}
       </div>
     </section>
+
+    <script is:inline>
+      (() => {
+        const ACTIVE_CLASSES = ['border-blog-proj-link', 'text-blog-proj-link'];
+        const INACTIVE_CLASSES = [
+          'border-blog-code/20',
+          'bg-blog-code-bg',
+          'text-blog-text',
+          'hover:border-blog-accent',
+          'hover:text-blog-link',
+        ];
+
+        const parsePeriod = (period) => {
+          if (!period || !period.includes(':')) return null;
+
+          const [type, value] = period.split(':');
+          if (!value) return null;
+
+          if (type === 'year' && /^\d{4}$/.test(value)) {
+            return { type, value };
+          }
+
+          if (type === 'month' && /^\d{4}-\d{2}$/.test(value)) {
+            return { type, value };
+          }
+
+          return null;
+        };
+
+        const setPeriodState = (periodLink, isActive) => {
+          if (isActive) {
+            periodLink.classList.add(...ACTIVE_CLASSES);
+            periodLink.classList.remove(...INACTIVE_CLASSES);
+            return;
+          }
+
+          periodLink.classList.remove(...ACTIVE_CLASSES);
+          periodLink.classList.add(...INACTIVE_CLASSES);
+        };
+
+        const wireDateFilter = () => {
+          const section = document.querySelector('[data-blog-page]');
+          if (!section || section.dataset.dateFilterReady === 'true') return;
+          section.dataset.dateFilterReady = 'true';
+
+          const periodLinks = Array.from(section.querySelectorAll('[data-period-value]'));
+          if (!periodLinks.length) return;
+
+          const clearFilterLink = section.querySelector('[data-clear-filter]');
+          const summary = section.querySelector('[data-filter-summary]');
+          const summaryCount = section.querySelector('[data-filter-count]');
+          const summaryLabel = section.querySelector('[data-filter-label]');
+          const summaryPeriod = section.querySelector('[data-filter-period]');
+
+          const postItems = Array.from(section.querySelectorAll('[data-post-item]')).map((item) => ({
+            item,
+            year: item.getAttribute('data-post-year') || '',
+            month: item.getAttribute('data-post-month') || '',
+          }));
+
+          const periodLabels = new Map(
+            periodLinks.map((periodLink) => [
+              periodLink.getAttribute('data-period-value') || '',
+              periodLink.getAttribute('data-period-label') || '',
+            ])
+          );
+
+          let activePeriod = '';
+
+          const updateUrl = (period) => {
+            const url = new URL(window.location.href);
+            if (period) {
+              url.searchParams.set('period', period);
+            } else {
+              url.searchParams.delete('period');
+            }
+            window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+          };
+
+          const applyPeriodFilter = (period) => {
+            activePeriod = period;
+            const parsedPeriod = parsePeriod(period);
+            let visibleCount = 0;
+
+            for (const post of postItems) {
+              const matches =
+                !parsedPeriod ||
+                (parsedPeriod.type === 'year'
+                  ? post.year === parsedPeriod.value
+                  : post.month === parsedPeriod.value);
+              post.item.classList.toggle('hidden', !matches);
+              if (matches) visibleCount += 1;
+            }
+
+            for (const periodLink of periodLinks) {
+              const linkPeriod = periodLink.getAttribute('data-period-value') || '';
+              setPeriodState(periodLink, Boolean(parsedPeriod) && linkPeriod === period);
+            }
+
+            if (clearFilterLink) {
+              clearFilterLink.classList.toggle('hidden', !parsedPeriod);
+            }
+
+            if (summary && summaryCount && summaryLabel && summaryPeriod) {
+              if (!parsedPeriod) {
+                summary.classList.add('hidden');
+              } else {
+                summaryCount.textContent = String(visibleCount);
+                summaryLabel.textContent = visibleCount === 1 ? 'post' : 'posts';
+                summaryPeriod.textContent = periodLabels.get(period) || parsedPeriod.value;
+                summary.classList.remove('hidden');
+              }
+            }
+          };
+
+          for (const periodLink of periodLinks) {
+            periodLink.addEventListener('click', (event) => {
+              event.preventDefault();
+              const clickedPeriod = periodLink.getAttribute('data-period-value') || '';
+              const nextPeriod = activePeriod === clickedPeriod ? '' : clickedPeriod;
+              updateUrl(nextPeriod);
+              applyPeriodFilter(nextPeriod);
+            });
+          }
+
+          clearFilterLink?.addEventListener('click', (event) => {
+            event.preventDefault();
+            updateUrl('');
+            applyPeriodFilter('');
+          });
+
+          const requestedPeriod = new URLSearchParams(window.location.search).get('period') || '';
+          const initialPeriod = parsePeriod(requestedPeriod) ? requestedPeriod : '';
+          applyPeriodFilter(initialPeriod);
+        };
+
+        wireDateFilter();
+        document.addEventListener('astro:page-load', wireDateFilter);
+      })();
+    </script>
   </Layout>
 </PostHogLayout>

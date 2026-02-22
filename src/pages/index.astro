@@ -5,9 +5,10 @@ import PostCard from '../components/PostCard.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
 
+const latestPostLimit = 3;
 const posts = (await getCollection('blog'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-const postsSlice = posts.slice(0, 3);
+const postsSlice = posts.slice(0, latestPostLimit);
 
 const featuredProjectLimit = 4;
 const projects = (await getCollection('projects'))
@@ -36,8 +37,8 @@ const projectsSlice = projects.slice(0, featuredProjectLimit);
 
 	<section class="py-12 border-t border-blog-border">
 		<div class="flex items-center justify-between mb-8">
-			<h2 class="text-2xl font-bold text-blog-accent">Latest Posts</h2>
-			{posts.length > 3 ? (
+			<h2 class="text-2xl font-bold text-blog-accent">Latest Posts - {postsSlice.length}/{posts.length}</h2>
+			{posts.length > latestPostLimit ? (
 				<a href="/blog" class="text-blog-link flip-animate">View <span data-hover="all">all</span></a>
 			) : null}
 		</div>

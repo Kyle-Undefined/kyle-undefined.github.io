@@ -41,9 +41,56 @@ const { title, description = "Just a dude who enjoys writing code & learning;" }
 	</head>
 	<body class="min-h-screen flex flex-col">
 		<Header />
-		<main class="flex-grow pt-20 px-4 sm:px-6 lg:px-8 w-full max-w-4xl mx-auto">
+		<main data-site-main class="flex-grow pt-20 px-4 sm:px-6 lg:px-8 w-full max-w-4xl mx-auto">
 			<slot />
 		</main>
+		<button
+			type="button"
+			aria-label="Scroll to top"
+			data-scroll-top
+			style="right: 1rem;"
+			class="fixed bottom-6 z-40 rounded-full border border-blog-border bg-blog-code-bg/80 px-3 py-2 text-blog-accent shadow-sm transition-all duration-200 hover:text-blog-link hover:border-blog-accent opacity-0 translate-y-2 pointer-events-none cursor-pointer"
+		>
+			Top
+		</button>
 		<Footer />
+		<script is:inline>
+			(() => {
+				const wireScrollTop = () => {
+					const button = document.querySelector('[data-scroll-top]');
+					const main = document.querySelector('[data-site-main]');
+					if (!button || !main || button.dataset.scrollTopReady === 'true') return;
+					button.dataset.scrollTopReady = 'true';
+
+					const threshold = 320;
+					const updateOffset = () => {
+						const rect = main.getBoundingClientRect();
+						const minRight = 16;
+						const insetFromContentEdge = -50;
+						const nextRight = Math.max(minRight, window.innerWidth - rect.right + insetFromContentEdge);
+						button.style.right = `${nextRight}px`;
+					};
+
+					const updateVisibility = () => {
+						const shouldShow = window.scrollY > threshold;
+						button.classList.toggle('opacity-0', !shouldShow);
+						button.classList.toggle('translate-y-2', !shouldShow);
+						button.classList.toggle('pointer-events-none', !shouldShow);
+					};
+
+					button.addEventListener('click', () => {
+						window.scrollTo({ top: 0, behavior: 'smooth' });
+					});
+
+					window.addEventListener('scroll', updateVisibility, { passive: true });
+					window.addEventListener('resize', updateOffset);
+					updateOffset();
+					updateVisibility();
+				};
+
+				wireScrollTop();
+				document.addEventListener('astro:page-load', wireScrollTop);
+			})();
+		</script>
 	</body>
 </html>
