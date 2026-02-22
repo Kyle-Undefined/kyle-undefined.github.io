@@ -6,6 +6,61 @@ import { site, i18n } from 'astro:config/client';
 
 const blog = (await getCollection('blog')).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 const parser = new MarkdownIt();
+const wikiImagePattern = /!\[\[([^\]]+)\]\]/g;
+const iframePattern = /<iframe[^>]*src=["']([^"']+)["'][^>]*>.*?<\/iframe>/gi;
+
+function isFullyQualifiedUrl(value) {
+    try {
+        const parsed = new URL(value);
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    }
+    catch {
+        return false;
+    }
+}
+
+function normalizeRssContent(markdown) {
+    const withWikiEmbedsHandled = markdown.replaceAll(wikiImagePattern, (_, rawTarget) => {
+        const [target] = rawTarget.split('|');
+        const cleanedTarget = target.trim();
+
+        if (!isFullyQualifiedUrl(cleanedTarget)) {
+            return '[Embedded Image]';
+        }
+
+        return `![Embedded Image](${cleanedTarget})`;
+    });
+
+    return withWikiEmbedsHandled.replaceAll(iframePattern, '[Note: Embedded content from $1]');
+}
+
+function sanitizeRssHtml(html) {
+    return sanitizeHtml(html, {
+        allowedTags: sanitizeHtml.defaults.allowedTags.concat('img'),
+        allowedAttributes: {
+            ...sanitizeHtml.defaults.allowedAttributes,
+            img: ['src', 'alt', 'title'],
+        },
+        transformTags: {
+            img: (_, attribs) => {
+                const src = attribs.src?.trim();
+
+                if (!src || !isFullyQualifiedUrl(src)) {
+                    return { tagName: 'span', text: '[Embedded Image]' };
+                }
+
+                return {
+                    tagName: 'img',
+                    attribs: {
+                        src,
+                        alt: attribs.alt || 'Embedded Image',
+                        ...(attribs.title ? { title: attribs.title } : {}),
+                    },
+                };
+            },
+        },
+    });
+}
 
 export async function GET(context) {
     return rss({
@@ -26,7 +81,7 @@ export async function GET(context) {
             description: post.data.description,
             link: `/blog/${post.slug}/`,
             pubDate: post.data.pubDate,
-            content: sanitizeHtml(parser.render(post.body.replaceAll(/!\[\[([^\]]+)\]\]/g, '[Embedded Image]').replaceAll(/<iframe[^>]*src=["']([^"']+)["'][^>]*>.*?<\/iframe>/gi, '[Note: Embedded content from $1]'))),
+            content: sanitizeRssHtml(parser.render(normalizeRssContent(post.body))),
         })),
     });
 }
