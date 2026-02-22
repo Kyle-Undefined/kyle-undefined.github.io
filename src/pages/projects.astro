@@ -6,11 +6,36 @@ import { getCollection } from 'astro:content';
 
 const projects = (await getCollection('projects'))
   .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+const tagCounts = projects.reduce((counts, project) => {
+  for (const tag of project.data.tags ?? []) {
+    counts.set(tag, (counts.get(tag) ?? 0) + 1);
+  }
+  return counts;
+}, new Map<string, number>());
+
+const tagCloud = [...tagCounts.entries()]
+  .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  .map(([tag, count]) => ({ tag, count }));
+
+const minTagCount = tagCloud.at(-1)?.count ?? 1;
+const maxTagCount = tagCloud[0]?.count ?? 1;
+
+const getTagSizeClass = (count: number) => {
+  if (maxTagCount === minTagCount) return 'text-sm';
+
+  const normalized = (count - minTagCount) / (maxTagCount - minTagCount);
+  if (normalized >= 0.8) return 'text-xl';
+  if (normalized >= 0.6) return 'text-lg';
+  if (normalized >= 0.4) return 'text-base';
+  if (normalized >= 0.2) return 'text-sm';
+  return 'text-xs';
+};
 ---
 
 <PostHogLayout>
   <Layout title="Projects | KyleUndefined.dev" description="Collection of my projects, that I still have, over the years...">
-    <section class="py-12">
+    <section class="py-12" data-projects-page>
       <div class="max-w-3xl mb-12">
         <h1 class="text-4xl font-bold mb-4 text-blog-accent">Projects</h1>
         <p class="text-xl text-blog-text">
@@ -18,11 +43,164 @@ const projects = (await getCollection('projects'))
         </p>
       </div>
 
+      {tagCloud.length > 0 && (
+        <div class="mb-10 rounded-2xl border border-blog-border bg-blog-code-bg/50 p-6">
+          <div class="mb-4 flex items-center justify-between gap-3">
+            <h2 class="text-lg font-semibold text-blog-accent">Tags</h2>
+            <a href="/projects" class="text-sm text-blog-link hidden flip-animate" data-clear-filter>
+              Clear <span data-hover="filter">filter</span>
+            </a>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            {tagCloud.map(({ tag, count }) => {
+              const sizeClass = getTagSizeClass(count);
+
+              return (
+                <a
+                  href={`/projects?tag=${encodeURIComponent(tag)}`}
+                  data-cloud-tag={tag}
+                  class:list={[
+                    'inline-flex items-center gap-2 rounded-full border px-3 py-1 transition-colors',
+                    sizeClass,
+                    'border-blog-code/20 bg-blog-code-bg text-blog-text hover:border-blog-accent hover:text-blog-link',
+                  ]}
+                >
+                  <span>{tag}</span>
+                  <span class="text-[11px] opacity-75">{count}</span>
+                </a>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      <p class="mb-6 text-sm text-blog-text hidden" data-filter-summary>
+        Showing <span data-filter-count>0</span> <span data-filter-label>projects</span> tagged{' '}
+        <span class="font-semibold text-blog-accent" data-filter-tag></span>:
+      </p>
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         {projects.map((project) => (
-          <ProjectCard project={project} />
+          <div data-project-item data-project-tags={JSON.stringify(project.data.tags ?? [])}>
+            <ProjectCard project={project} />
+          </div>
         ))}
       </div>
     </section>
+
+    <script is:inline>
+      (() => {
+        const ACTIVE_CLASSES = ['border-blog-proj-link', 'text-blog-proj-link'];
+        const INACTIVE_CLASSES = [
+          'border-blog-code/20',
+          'bg-blog-code-bg',
+          'text-blog-text',
+          'hover:border-blog-accent',
+          'hover:text-blog-link',
+        ];
+
+        const setTagState = (tagLink, isActive) => {
+          if (isActive) {
+            tagLink.classList.add(...ACTIVE_CLASSES);
+            tagLink.classList.remove(...INACTIVE_CLASSES);
+            return;
+          }
+
+          tagLink.classList.remove(...ACTIVE_CLASSES);
+          tagLink.classList.add(...INACTIVE_CLASSES);
+        };
+
+        const wireTagFilter = () => {
+          const section = document.querySelector('[data-projects-page]');
+          if (!section || section.dataset.tagFilterReady === 'true') return;
+          section.dataset.tagFilterReady = 'true';
+
+          const tagLinks = Array.from(section.querySelectorAll('[data-cloud-tag]'));
+          const clearFilterLink = section.querySelector('[data-clear-filter]');
+          const summary = section.querySelector('[data-filter-summary]');
+          const summaryCount = section.querySelector('[data-filter-count]');
+          const summaryLabel = section.querySelector('[data-filter-label]');
+          const summaryTag = section.querySelector('[data-filter-tag]');
+
+          const projectItems = Array.from(section.querySelectorAll('[data-project-item]')).map((item) => {
+            let tags = [];
+
+            try {
+              tags = JSON.parse(item.getAttribute('data-project-tags') || '[]');
+            } catch {
+              tags = [];
+            }
+
+            return { item, tags: Array.isArray(tags) ? tags : [] };
+          });
+
+          let activeTag = '';
+
+          const updateUrl = (tag) => {
+            const url = new URL(window.location.href);
+            if (tag) {
+              url.searchParams.set('tag', tag);
+            } else {
+              url.searchParams.delete('tag');
+            }
+            window.history.replaceState({}, '', `${url.pathname}${url.search}${url.hash}`);
+          };
+
+          const applyTagFilter = (tag) => {
+            activeTag = tag;
+            let visibleCount = 0;
+
+            for (const project of projectItems) {
+              const matches = !tag || project.tags.includes(tag);
+              project.item.classList.toggle('hidden', !matches);
+              if (matches) visibleCount += 1;
+            }
+
+            for (const tagLink of tagLinks) {
+              const linkTag = tagLink.getAttribute('data-cloud-tag') || '';
+              setTagState(tagLink, Boolean(tag) && linkTag === tag);
+            }
+
+            if (clearFilterLink) {
+              clearFilterLink.classList.toggle('hidden', !tag);
+            }
+
+            if (summary && summaryCount && summaryLabel && summaryTag) {
+              if (!tag) {
+                summary.classList.add('hidden');
+              } else {
+                summaryCount.textContent = String(visibleCount);
+                summaryLabel.textContent = visibleCount === 1 ? 'project' : 'projects';
+                summaryTag.textContent = tag;
+                summary.classList.remove('hidden');
+              }
+            }
+          };
+
+          for (const tagLink of tagLinks) {
+            tagLink.addEventListener('click', (event) => {
+              event.preventDefault();
+              const clickedTag = tagLink.getAttribute('data-cloud-tag') || '';
+              const nextTag = activeTag === clickedTag ? '' : clickedTag;
+              updateUrl(nextTag);
+              applyTagFilter(nextTag);
+            });
+          }
+
+          clearFilterLink?.addEventListener('click', (event) => {
+            event.preventDefault();
+            updateUrl('');
+            applyTagFilter('');
+          });
+
+          const initialTag = new URLSearchParams(window.location.search).get('tag') || '';
+          applyTagFilter(initialTag);
+        };
+
+        wireTagFilter();
+        document.addEventListener('astro:page-load', wireTagFilter);
+      })();
+    </script>
   </Layout>
 </PostHogLayout>

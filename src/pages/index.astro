@@ -9,9 +9,10 @@ const posts = (await getCollection('blog'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
 const postsSlice = posts.slice(0, 3);
 
+const featuredProjectLimit = 4;
 const projects = (await getCollection('projects'))
 	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-const projectsSlice = projects.slice(0, 4);
+const projectsSlice = projects.slice(0, featuredProjectLimit);
 ---
 
 <PostHogLayout>
@@ -54,8 +55,8 @@ const projectsSlice = projects.slice(0, 4);
 
 	<section class="py-12 border-t border-blog-border">
 		<div class="flex items-center justify-between mb-8">
-			<h2 class="text-2xl font-bold text-blog-accent">Featured Projects</h2>
-			{projects.length > 4 ? (
+			<h2 class="text-2xl font-bold text-blog-accent">Featured Projects - {projectsSlice.length}/{projects.length}</h2>
+			{projects.length > featuredProjectLimit ? (
 				<a href="/projects" class="text-blog-link flip-animate">View <span data-hover="all">all</span></a>
 			) : null}
 		</div>
