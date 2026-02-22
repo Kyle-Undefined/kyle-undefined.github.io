@@ -1,0 +1,165 @@
+---
+import { getGitHubContributions } from '../utils/githubContributions';
+
+interface Props {
+  username: string;
+  title?: string;
+}
+
+const { username, title = 'GitHub Activity' } = Astro.props;
+const contributions = await getGitHubContributions(username);
+
+const weekdayLabels = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
+
+const levelNames = [
+  'No contributions',
+  'Low contributions',
+  'Medium-low contributions',
+  'Medium-high contributions',
+  'High contributions',
+];
+
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+function formatDate(date: string): string {
+  return dateFormatter.format(new Date(`${date}T00:00:00Z`));
+}
+---
+
+<section class="py-12 border-t border-blog-border">
+  <div class="flex items-center justify-between mb-8 gap-4">
+    <h2 class="text-2xl font-bold text-blog-accent">{title}</h2>
+    <a
+      href={`https://github.com/${username}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="text-blog-link flip-animate whitespace-nowrap"
+    >
+      View <span data-hover="profile">profile</span>
+    </a>
+  </div>
+
+  {contributions ? (
+    <div class="gh-card rounded-lg border border-blog-border p-4 md:p-5">
+      <p class="text-sm md:text-base text-blog-text mb-4">
+        {contributions.summary}
+      </p>
+
+      <div class="overflow-x-auto pb-2">
+        <table class="gh-table border-separate border-spacing-[3px] min-w-max">
+          <thead>
+            <tr>
+              <th class="w-8"></th>
+              {contributions.monthLabels.map((label) => (
+                <th class="gh-month text-left text-[10px] md:text-xs font-normal text-blog-text/70">
+                  {label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {weekdayLabels.map((weekdayLabel, weekdayIndex) => (
+              <tr>
+                <th class="gh-weekday text-left text-[10px] md:text-xs font-normal text-blog-text/60 pr-1">
+                  {weekdayLabel}
+                </th>
+                {contributions.weeks.map((week) => {
+                  const day = week[weekdayIndex];
+                  return (
+                    <td>
+                      {day ? (
+                        <div
+                          class:list={['gh-cell', `gh-level-${day.level}`]}
+                          title={`${day.count} contribution${day.count === 1 ? '' : 's'} on ${formatDate(day.date)} (${levelNames[day.level] ?? levelNames[0]})`}
+                          aria-label={`${day.count} contribution${day.count === 1 ? '' : 's'} on ${formatDate(day.date)}`}
+                        ></div>
+                      ) : (
+                        <div class="gh-cell gh-empty" aria-hidden="true"></div>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-4 flex flex-wrap items-center justify-between gap-3 text-xs text-blog-text/80">
+        <div class="flex items-center gap-2">
+          <span>Less</span>
+          <span class="gh-cell gh-level-0"></span>
+          <span class="gh-cell gh-level-1"></span>
+          <span class="gh-cell gh-level-2"></span>
+          <span class="gh-cell gh-level-3"></span>
+          <span class="gh-cell gh-level-4"></span>
+          <span>More</span>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div class="rounded-lg border border-blog-border bg-blog-code-bg/40 p-4 text-sm text-blog-text">
+      Could not load GitHub contribution data during build. Try another deploy/build to refresh it.
+    </div>
+  )}
+</section>
+
+<style>
+  .gh-card {
+    background:
+      radial-gradient(circle at top right, rgba(15, 182, 214, 0.12), transparent 45%),
+      linear-gradient(180deg, rgba(122, 162, 247, 0.06), rgba(25, 22, 33, 0.45));
+  }
+
+  .gh-table {
+    table-layout: fixed;
+  }
+
+  .gh-month {
+    width: 12px;
+    min-width: 12px;
+    height: 14px;
+  }
+
+  .gh-weekday {
+    width: 26px;
+    min-width: 26px;
+  }
+
+  .gh-cell {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .gh-empty {
+    background-color: transparent;
+    border-color: transparent;
+  }
+
+  .gh-level-0 {
+    background-color: #1a1830;
+  }
+
+  .gh-level-1 {
+    background-color: #164455;
+  }
+
+  .gh-level-2 {
+    background-color: #0f5f77;
+  }
+
+  .gh-level-3 {
+    background-color: #0fb6d6;
+  }
+
+  .gh-level-4 {
+    background-color: #2fff1f;
+  }
+</style>
