@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
+import { getReadingTimeLabel } from '../utils/readingTime';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -7,6 +8,7 @@ interface Props {
 
 const { post } = Astro.props;
 const { title, description, pubDate } = post.data;
+const readingTime = getReadingTimeLabel(post.body);
 ---
 
 <a href={`/blog/${post.slug}`} class="group flex flex-col h-full bg-blog-code-bg rounded-2xl overflow-hidden shadow-sm hover:shadow-md duration-300 border border-blog-border hover:border-blog-accent transition-all duration-300">
@@ -17,7 +19,7 @@ const { title, description, pubDate } = post.data;
   </div>
   
   <div class="p-6 flex flex-col flex-grow">
-    <div class="text-sm text-blog-text mb-2">
+    <div class="mb-2 flex items-center gap-2 text-sm text-blog-text">
       <time datetime={pubDate.toISOString()}>
         {pubDate.toLocaleDateString('en-us', {
           year: 'numeric',
@@ -25,6 +27,8 @@ const { title, description, pubDate } = post.data;
           day: 'numeric',
         })}
       </time>
+      <span aria-hidden="true">&middot;</span>
+      <span>{readingTime}</span>
     </div>
     <p class="text-blog-text text-sm line-clamp-3">
       {description}
