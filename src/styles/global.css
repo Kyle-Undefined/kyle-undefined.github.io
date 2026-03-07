@@ -131,20 +131,13 @@ mark, strong {
 }
 
 article a {
-  position: relative;
+  background-image: linear-gradient(var(--color-blog-link), var(--color-blog-link));
+  background-size: 0% .1em;
+  background-position: left bottom .14em;
+  background-repeat: no-repeat;
+  transition: background-size .4s cubic-bezier(0,.5,0,1);
 
-  &:hover:after {
-    right: 0;
-  }
-
-  &:after {
-    border-radius: 1em;
-    border-top: .1em solid var(--color-blog-link);
-    content: "";
-    position: absolute;
-    right: 100%;
-    bottom: .14em;
-    left: 0;
-    transition: right .4s cubic-bezier(0,.5,0,1);
+  &:hover {
+    background-size: 100% .1em;
   }
 }
