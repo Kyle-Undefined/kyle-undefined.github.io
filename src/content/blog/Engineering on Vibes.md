@@ -219,7 +219,7 @@ I used the `/using-superpowers` plugin, as reading into this (`and the source co
 > 
 > the general designs should be dark theme styled. i don't want a terminal look, not a fan of those for a website. 
 > 
-> i like the synthwave style for vscode (https://raw.githubusercontent.com/robb0wen/synthwave-vscode/7eaf45c07650295625e1e5ea73274fc50f9ea3c1/themes/synthwave-color-theme.json) but that isn't a requirement for them, maybe one can incorporate that color scheme. otherwise, you come up with everything.
+> i like the synthwave style for vscode (https://github.com/robb0wen/synthwave-vscode) but that isn't a requirement for them, maybe one can incorporate that color scheme. otherwise, you come up with everything.
 >
 > really want to be impressed!
 
