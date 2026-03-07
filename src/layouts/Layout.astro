@@ -71,11 +71,19 @@ const { title, description = "Just a dude who enjoys writing code & learning;" }
 						button.style.right = `${nextRight}px`;
 					};
 
+					const progressBar = document.querySelector('[data-reading-progress]');
+
 					const updateVisibility = () => {
 						const shouldShow = window.scrollY > threshold;
 						button.classList.toggle('opacity-0', !shouldShow);
 						button.classList.toggle('translate-y-2', !shouldShow);
 						button.classList.toggle('pointer-events-none', !shouldShow);
+
+						if (progressBar) {
+							const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+							const progress = scrollable > 0 ? Math.min(window.scrollY / scrollable, 1) : 1;
+							progressBar.style.transform = `scaleX(${progress})`;
+						}
 					};
 
 					button.addEventListener('click', () => {

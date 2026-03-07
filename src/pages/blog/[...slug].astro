@@ -21,6 +21,11 @@ const readingTime = getReadingTimeLabel(post.body);
 
 <PostHogLayout>
   <Layout title={post.data.title} description={post.data.description}>
+    <div
+      data-reading-progress
+      style="transform: scaleX(0);"
+      class="fixed top-16 left-0 w-full z-50 h-[3px] bg-blog-accent origin-left"
+    ></div>
     <section class="py-10 max-w-3xl mx-auto">
       <article>
           <div class="mb-10 text-center">
