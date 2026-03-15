@@ -1,7 +1,6 @@
 ---
 import { type CollectionEntry, getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import PostHogLayout from '../../layouts/PostHogLayout.astro';
 import { getReadingTimeLabel } from '../../utils/readingTime';
 
 export async function getStaticPaths() {
@@ -19,8 +18,7 @@ const tocHeadings = headings.filter((heading) => heading.depth >= 2 && heading.d
 const readingTime = getReadingTimeLabel(post.body);
 ---
 
-<PostHogLayout>
-  <Layout title={post.data.title} description={post.data.description}>
+<Layout title={post.data.title} description={post.data.description}>
     <div
       data-reading-progress
       style="transform: scaleX(0);"
@@ -75,5 +73,4 @@ const readingTime = getReadingTimeLabel(post.body);
           </div>
       </article>
     </section>
-  </Layout>
-</PostHogLayout>
+  </Layout>

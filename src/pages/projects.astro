@@ -1,5 +1,4 @@
 ---
-import PostHogLayout from '../layouts/PostHogLayout.astro';
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { getCollection } from 'astro:content';
@@ -33,7 +32,6 @@ const getTagSizeClass = (count: number) => {
 };
 ---
 
-<PostHogLayout>
   <Layout title="Projects | KyleUndefined.dev" description="Collection of my projects, that I still have, over the years...">
     <section class="py-12" data-projects-page>
       <div class="max-w-3xl mb-12">
@@ -203,4 +201,3 @@ const getTagSizeClass = (count: number) => {
       })();
     </script>
   </Layout>
-</PostHogLayout>

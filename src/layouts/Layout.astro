@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import PostHog from '../components/posthog.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -16,6 +17,7 @@ const { title, description = "Just a dude who enjoys writing code & learning;" }
 <html lang="en" class="scroll-smooth">
 	<head>
 		<meta charset="utf-8" />
+		<PostHog />
 		<meta name="description" content={description} />
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
@@ -51,7 +53,7 @@ const { title, description = "Just a dude who enjoys writing code & learning;" }
 			style="right: 1rem;"
 			class="fixed bottom-6 z-40 rounded-full border border-blog-border bg-blog-code-bg/80 px-3 py-2 text-blog-accent shadow-sm transition-all duration-200 hover:text-blog-link hover:border-blog-accent opacity-0 translate-y-2 pointer-events-none cursor-pointer"
 		>
-			Top
+			↑
 		</button>
 		<Footer />
 		<script is:inline>
