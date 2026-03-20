@@ -6,6 +6,12 @@ interface Props {
 }
 
 const { project } = Astro.props;
+const projectDateLabel = project.data.pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'numeric',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
 ---
 
 <div 
@@ -37,7 +43,7 @@ const { project } = Astro.props;
     {project.data.description}
   </p>
   <p class="text-blog-text mb-6 text-xs">
-    Git init: {project.data.pubDate.toLocaleDateString()}
+    Git init: <time datetime={project.data.pubDate.toISOString()}>{projectDateLabel}</time>
   </p>
   <div class="flex flex-wrap gap-2">
     {project.data.tags && project.data.tags.map((tag) => (
