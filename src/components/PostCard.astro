@@ -11,7 +11,7 @@ const { title, description, pubDate } = post.data;
 const readingTime = getReadingTimeLabel(post.body);
 ---
 
-<a href={`/blog/${post.slug}`} class="group flex flex-col h-full bg-blog-code-bg rounded-2xl overflow-hidden shadow-sm hover:shadow-md duration-300 border border-blog-border hover:border-blog-accent transition-all duration-300">
+<a href={`/blog/${post.id}`} class="group flex flex-col h-full bg-blog-code-bg rounded-2xl overflow-hidden shadow-sm hover:shadow-md duration-300 border border-blog-border hover:border-blog-accent transition-all duration-300">
   <div class="aspect-video w-full overflow-hidden bg-[#202020] relative post-hero content-center">
     <h3 class="text-2xl font-bold text-blog-accent mb-2 group-hover:text-blog-code transition-colors text-center">
       {title}
