@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
+import sitemap from '@astrojs/sitemap';
 import favicons from 'astro-favicons';
 import wikiImagePlugin from './src/plugins/wikiImagePlugin.mjs';
 
@@ -24,6 +25,7 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
   integrations: [
+    sitemap(),
     favicons({
       input: {
         favicons: [

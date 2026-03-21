@@ -16,7 +16,29 @@ const projects = (await getCollection('projects'))
 const projectsSlice = projects.slice(0, featuredProjectLimit);
 ---
 
-  <Layout title="Home | KyleUndefined.dev">
+  <Layout title="Kyle Undefined | Just a dude who enjoys writing code and learning;">
+	<script type="application/ld+json" set:html={JSON.stringify({
+		"@context": "https://schema.org",
+		"@graph": [
+			{
+				"@type": "WebSite",
+				"name": "Kyle Undefined",
+				"url": "https://kyleundefined.dev",
+				"description": "Kyle Undefined - self-taught dev writing code, learning new tech, and sharing the journey.",
+				"inLanguage": "en"
+			},
+			{
+				"@type": "Person",
+				"name": "Kyle Undefined",
+				"url": "https://kyleundefined.dev",
+				"sameAs": [
+					"https://github.com/kyle-undefined"
+				],
+				"jobTitle": "Software Engineer",
+				"knowsAbout": ["TypeScript", "C#", "VB.NET", "ASP.NET Core", "SQL", "Microsoft SQL Server", "Database Design", "Full-Stack Development", "Front-End Development", "Back-End Development", "Software Engineering", "Web Development"]
+			}
+		]
+	})} />
 	<section class="py-12 md:py-10">
 		<div class="space-y-6">
 			<h1 class="text-4xl md:text-6xl font-bold tracking-tighter">

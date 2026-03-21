@@ -45,6 +45,39 @@ const monthFilters = [...monthCounts.entries()]
 ---
 
   <Layout title="Blog | Kyle Undefined" description="Bloggin what's on the noggin.">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "CollectionPage",
+          "name": "Blog",
+          "description": "Bloggin what's on the noggin.",
+          "url": "https://kyleundefined.dev/blog",
+          "author": {
+            "@type": "Person",
+            "name": "Kyle Undefined",
+            "url": "https://kyleundefined.dev"
+          },
+          "mainEntity": {
+            "@type": "ItemList",
+            "numberOfItems": posts.length,
+            "itemListElement": posts.map((post, i) => ({
+              "@type": "ListItem",
+              "position": i + 1,
+              "name": post.data.title,
+              "url": `https://kyleundefined.dev/blog/${post.id}`
+            }))
+          }
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://kyleundefined.dev" },
+            { "@type": "ListItem", "position": 2, "name": "Blog" }
+          ]
+        }
+      ]
+    })} />
     <section class="py-12" data-blog-page>
       <h1 class="text-4xl font-bold mb-8 text-blog-accent">Blog</h1>
 
